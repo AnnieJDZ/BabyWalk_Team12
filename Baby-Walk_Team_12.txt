@@ -1,0 +1,56 @@
+#include <Servo.h> 
+const int leftForward = 2;
+const int leftBackward = 3;
+const int rightForward = 4;
+const int rightBackward = 5;
+
+const int trig = 9; 
+const int echo = 10; //assign digital pins 2 and 3 (PWM capable) to trigger and echo
+unsigned long duration; // unsigned long is a variable type that can hold much larger numbers 
+unsigned long distance;
+
+int servoPin = 7;
+Servo servo;   
+int angle = 0;   // servo position in degrees
+
+void setup() 
+{
+  pinMode(leftForward , OUTPUT);
+  pinMode(leftBackward , OUTPUT);
+  pinMode(rightForward , OUTPUT);
+  pinMode(rightBackward , OUTPUT);
+  pinMode(trig, OUTPUT); // trig is output as it sends out signal
+  pinMode(echo, INPUT);
+  servo.attach(servoPin);
+}
+
+void loop()
+{ digitalWrite(trig, LOW);
+  delayMicroseconds(5);
+  digitalWrite(trig, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trig, LOW);
+  pinMode(echo, INPUT);
+  
+  duration = pulseIn(echo,HIGH);
+  distance = duration * 0.034 / 2;
+
+  
+  if (distance < 10){
+    digitalWrite(leftForward , HIGH);
+    digitalWrite(leftBackward , LOW);
+    digitalWrite(rightForward , HIGH);
+    digitalWrite(rightBackward , LOW);
+    angle = 90;
+    servo.write(angle);               
+    delay(3000);
+  }
+  else{
+    digitalWrite(leftForward , LOW);
+    digitalWrite(leftBackward , LOW);
+    digitalWrite(rightForward , LOW);
+    digitalWrite(rightBackward , LOW);
+    angle = 180;
+    servo.write(angle);               
+    delay(3000); 
+  }
